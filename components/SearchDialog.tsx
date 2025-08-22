@@ -12,7 +12,9 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { useCompletion } from 'ai/react'
-import { X, Loader, User, Frown, CornerDownLeft, Search, Wand } from 'lucide-react'
+import { Search, X, Loader, Send } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export function SearchDialog() {
   const [open, setOpen] = React.useState(false)
@@ -29,8 +31,7 @@ export function SearchDialog() {
       }
 
       if (e.key === 'Escape') {
-        console.log('esc')
-        handleModalToggle()
+        setOpen(false)
       }
     }
 
@@ -38,31 +39,33 @@ export function SearchDialog() {
     return () => document.removeEventListener('keydown', down)
   }, [])
 
-  function handleModalToggle() {
-    setOpen(!open)
-    setQuery('')
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (query.trim()) {
+      complete(query)
+    }
   }
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault()
-    console.log(query)
-    complete(query)
+  const handleClose = () => {
+    setOpen(false)
+    setQuery('')
   }
 
   return (
     <>
+      {/* Search Button */}
       <button
         onClick={() => setOpen(true)}
         className="text-base flex gap-2 items-center px-4 py-2 z-50 relative
         text-slate-500 dark:text-slate-400  hover:text-slate-700 dark:hover:text-slate-300
         transition-colors
-        rounded-md
+        rounded-full
         border border-slate-200 dark:border-slate-500 hover:border-slate-300 dark:hover:border-slate-500
         min-w-[300px] "
       >
         <Search width={15} />
         <span className="border border-l h-5"></span>
-        <span className="inline-block ml-4">Search...</span>
+        <span className="inline-block ml-4">Ask about Hyrox...</span>
         <kbd
           className="absolute right-3 top-2.5
           pointer-events-none inline-flex h-5 select-none items-center gap-1
@@ -72,94 +75,116 @@ export function SearchDialog() {
           opacity-100 "
         >
           <span className="text-xs">⌘</span>K
-        </kbd>{' '}
+        </kbd>
       </button>
-      <Dialog open={open}>
-        <DialogContent className="sm:max-w-[850px] max-h-[80vh] overflow-y-auto text-black">
-          <DialogHeader>
-            <DialogTitle>OpenAI powered doc search</DialogTitle>
-            <DialogDescription>
-              Build your own ChatGPT style search with Next.js, OpenAI & Supabase.
+
+      {/* Simple Modal */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto overflow-x-hidden border border-gray-700 shadow-lg" style={{ background: 'linear-gradient(to bottom, #1e3a5f, #000000)' }}>
+          <DialogHeader className="text-center p-6">
+            <DialogTitle className="text-2xl font-bold text-white">Hyrox Q&A Bot</DialogTitle>
+            <DialogDescription className="text-gray-300">
+              Ask anything about Hyrox competitions, events, training, or general information!
             </DialogDescription>
-            <hr />
-            <button className="absolute top-0 right-2 p-2" onClick={() => setOpen(false)}>
-              <X className="h-4 w-4 dark:text-gray-100" />
-            </button>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4 text-slate-700">
-              {query && (
-                <div className="flex gap-4">
-                  <span className="bg-slate-100 dark:bg-slate-300 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
-                    <User width={18} />{' '}
-                  </span>
-                  <p className="mt-0.5 font-semibold text-slate-700 dark:text-slate-100">{query}</p>
-                </div>
-              )}
-
-              {isLoading && (
-                <div className="animate-spin relative flex w-5 h-5 ml-2">
-                  <Loader />
-                </div>
-              )}
-
-              {error && (
-                <div className="flex items-center gap-4">
-                  <span className="bg-red-100 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
-                    <Frown width={18} />
-                  </span>
-                  <span className="text-slate-700 dark:text-slate-100">
-                    Sad news, the search has failed! Please try again.
-                  </span>
-                </div>
-              )}
-
-              {completion && !error ? (
-                <div className="flex items-center gap-4 dark:text-white">
-                  <span className="bg-green-500 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
-                    <Wand width={18} className="text-white" />
-                  </span>
-                  <h3 className="font-semibold">Answer:</h3>
-                  {completion}
-                </div>
-              ) : null}
-
-              <div className="relative">
-                <Input
-                  placeholder="Ask a question..."
-                  name="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="col-span-3"
-                />
-                <CornerDownLeft
-                  className={`absolute top-3 right-5 h-4 w-4 text-gray-300 transition-opacity ${
-                    query ? 'opacity-100' : 'opacity-0'
-                  }`}
-                />
-              </div>
-              <div className="text-xs text-gray-500 dark:text-gray-100">
-                Or try:{' '}
-                <button
-                  type="button"
-                  className="px-1.5 py-0.5
-                  bg-slate-50 dark:bg-gray-500
-                  hover:bg-slate-100 dark:hover:bg-gray-600
-                  rounded border border-slate-200 dark:border-slate-600
-                  transition-colors"
-                  onClick={(_) => setQuery('What are embeddings?')}
-                >
-                  What are embeddings?
-                </button>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit" className="bg-red-500">
-                Ask
+          <div className="space-y-6">
+            {/* Input Form */}
+            <form onSubmit={handleSubmit} className="space-y-4 px-6">
+              <Input
+                placeholder="Type your question about Hyrox here..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-full"
+                autoFocus
+              />
+              
+              <Button
+                type="submit"
+                disabled={!query.trim() || isLoading}
+                className="w-full rounded-full"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader className="animate-spin mr-2" width={20} />
+                    Searching...
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-2" width={20} />
+                    Ask Question
+                  </>
+                )}
               </Button>
-            </DialogFooter>
-          </form>
+            </form>
+
+
+            {/* AI Response Display */}
+            {completion && (
+              <div className="px-6">
+                <div className="bg-gray-800/40 backdrop-blur-sm p-4 rounded-lg border border-gray-700 overflow-x-auto">
+                  <p className="text-sm text-gray-400 mb-2">Answer:</p>
+                  <div className="text-white leading-relaxed prose prose-invert max-w-none prose-p:text-white prose-headings:text-white prose-strong:text-white prose-a:text-blue-400 prose-a:no-underline prose-a:hover:underline prose-code:text-gray-300 prose-code:bg-gray-900 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {completion}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Error Display */}
+            {error && (
+              <div className="px-6">
+                <div className="bg-red-900/30 backdrop-blur-sm p-4 rounded-lg border border-red-700">
+                  <p className="text-sm text-red-400 mb-2">Error:</p>
+                  <p className="text-red-200">{error.message}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Sample Questions */}
+            {!query && !completion && (
+              <div className="px-6">
+                <p className="text-sm text-gray-400 mb-3">Or try asking:</p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "What is Hyrox?",
+                    "How do I train for Hyrox?",
+                    "What are the competition rules?",
+                    "How long is a Hyrox event?"
+                  ].map((sample, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      onClick={() => setQuery(sample)}
+                      size="sm"
+                      className="rounded-full"
+                    >
+                      {sample}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="p-4">
+            <Button variant="outline" onClick={handleClose} className="rounded-full">
+              Close
+            </Button>
+            {completion && (
+              <Button 
+                onClick={() => {
+                  setQuery('')
+                  // Reset completion would need to be handled by the useCompletion hook
+                }}
+                className="rounded-full"
+              >
+                Ask Another Question
+              </Button>
+            )}
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

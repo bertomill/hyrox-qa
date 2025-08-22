@@ -1,5 +1,5 @@
 {
-  "name": "supabase-with-openai",
+  "name": "hyrox-qa-bot",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,10 @@
     "lint": "next lint",
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "embeddings": "tsx lib/generate-embeddings.ts",
-    "embeddings:refresh": "tsx lib/generate-embeddings.ts --refresh"
+    "embeddings:refresh": "tsx lib/generate-embeddings.ts --refresh",
+    "crawl:hyrox": "tsx lib/crawl-hyrox.ts",
+    "convert:hyrox": "tsx lib/convert-hyrox-to-mdx.ts",
+    "convert:pdfs": "tsx lib/convert-pdfs-to-mdx.ts"
   },
   "prettier": {
     "trailingComma": "es5",
@@ -21,6 +24,7 @@
     "sqlKeywordCase": "lower"
   },
   "dependencies": {
+    "@mendable/firecrawl-js": "^3.0.3",
     "@radix-ui/react-dialog": "^1.0.3",
     "@radix-ui/react-label": "^2.0.1",
     "@supabase/supabase-js": "^2.13.0",
@@ -46,8 +50,11 @@
     "next": "13.2.4",
     "openai": "^3.3.0",
     "openai-edge": "^1.1.0",
+    "pdf-parse": "^1.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^1.10.0",
     "tailwindcss-animate": "^1.0.5",
     "typescript": "^4.9.5",

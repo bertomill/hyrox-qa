@@ -1,16 +1,16 @@
-# Next.js OpenAI Doc Search Starter
+# Hyrox Q&A Bot - AI-Powered Information Assistant
 
-This starter takes all the `.mdx` files in the `pages` directory and processes them to use as custom context within [OpenAI Text Completion](https://platform.openai.com/docs/guides/completion) prompts.
+This application provides an AI-powered Q&A bot that answers questions about Hyrox competitions, events, training, and general information. It uses OpenAI's API to provide instant answers based on official Hyrox website content and resources.
 
 ## Deploy
 
-Deploy this starter to Vercel. The Supabase integration will automatically set the required environment variables and configure your [Database Schema](./supabase/migrations/20230406025118_init.sql). All you have to do is set your `OPENAI_KEY` and you're ready to go!
+Deploy this Hyrox Q&A Bot to Vercel. The Supabase integration will automatically set the required environment variables and configure your [Database Schema](./supabase/migrations/20230406025118_init.sql). All you have to do is set your `OPENAI_KEY` and you're ready to go!
 
 [![Deploy with Vercel](https://vercel.com/new/clone?demo-title=Next.js%20OpenAI%20Doc%20Search%20Starter&demo-description=Template%20for%20building%20your%20own%20custom%20ChatGPT%20style%20doc%20search%20powered%20by%20Next.js%2C%20OpenAI%2C%20and%20Supabase.&demo-url=https%3A%2F%2Fsupabase.com%2Fdocs&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F1OntM6THNEUvlUsYy6Bjmf%2F475e39dbc84779538c8ed47c63a37e0e%2Fnextjs_openai_doc_search_og.png&project-name=Next.js%20OpenAI%20Doc%20Search%20Starter&repository-name=nextjs-openai-doc-search-starter&repository-url=https%3A%2F%2Fgithub.com%2Fsupabase-community%2Fnextjs-openai-doc-search%2F&from=github&integration-ids=oac_VqOgBHqhEoFTPzGkPd7L0iH6&env=OPENAI_KEY&envDescription=Get%20your%20OpenAI%20API%20key%3A&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&teamCreateStatus=hidden&external-id=https%3A%2F%2Fgithub.com%2Fsupabase-community%2Fnextjs-openai-doc-search%2Ftree%2Fmain)
 
 ## Technical Details
 
-Building your own custom ChatGPT involves four steps:
+Building your own custom AI fitness coach involves four steps:
 
 1. [👷 Build time] Pre-process the knowledge base (your `.mdx` files in your `pages` folder).
 2. [👷 Build time] Store embeddings in Postgres with [pgvector](https://supabase.com/docs/guides/database/extensions/pgvector).
@@ -71,8 +71,44 @@ The initialization of the database, including the setup of the `pgvector` extens
 
 - `cp .env.example .env`
 - Set your `OPENAI_KEY` in the newly created `.env` file.
-- Set `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` run:
+- Set `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` by running:
   > Note: You have to run supabase to retrieve the keys.
+
+### Quick Start (Updated)
+
+1. **Install dependencies:**
+
+   ```bash
+   pnpm install
+   ```
+
+2. **Start Supabase locally:**
+
+   ```bash
+   supabase start
+   ```
+
+3. **Copy and configure environment:**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Update the `.env` file with your OpenAI API key from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)
+
+4. **Generate embeddings:**
+
+   ```bash
+   pnpm run embeddings
+   ```
+
+5. **Start the development server:**
+
+   ```bash
+   pnpm dev
+   ```
+
+6. **Open your browser** and navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Start Supabase
 
@@ -96,12 +132,12 @@ In a new terminal window, run
 pnpm dev
 ```
 
-### Using your custom .mdx docs
+### Using your custom Hyrox content
 
-1. By default your documentation will need to be in `.mdx` format. This can be done by renaming existing (or compatible) markdown `.md` file.
-2. Run `pnpm run embeddings` to regenerate embeddings.
+1. Add your Hyrox training guides, workout plans, and fitness content in `.mdx` format in the `pages` directory.
+2. Run `pnpm run embeddings` to regenerate embeddings for your content.
    > Note: Make sure supabase is running. To check, run `supabase status`. If is not running run `supabase start`.
-3. Run `pnpm dev` again to refresh NextJS localhost:3000 rendered page.
+3. Run `pnpm dev` again to refresh the application with your new content.
 
 ## Learn More
 

@@ -88,8 +88,8 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)))
-    rgb(var(--background-start-rgb));
+  background: linear-gradient(to bottom, #1e3a5f, #000000);
+  min-height: 100vh;
 }
 
 a {

@@ -97,6 +97,7 @@ export default async function handler(req: NextRequest) {
     const tokenizer = new GPT3Tokenizer({ type: 'gpt3' })
     let tokenCount = 0
     let contextText = ''
+    let sources: string[] = []
 
     for (let i = 0; i < pageSections.length; i++) {
       const pageSection = pageSections[i]
@@ -108,17 +109,25 @@ export default async function handler(req: NextRequest) {
         break
       }
 
+      // Add source to our list if it has a path/slug and we haven't seen it yet
+      if (pageSection.path && !sources.includes(pageSection.path)) {
+        sources.push(pageSection.path)
+      }
+
       contextText += `${content.trim()}\n---\n`
     }
 
     const prompt = codeBlock`
       ${oneLine`
-        You are a very enthusiastic Supabase representative who loves
-        to help people! Given the following sections from the Supabase
+        You are a very enthusiastic HYROX representative who loves
+        to help people! Given the following sections from the HYROX
         documentation, answer the question using only that information,
         outputted in markdown format. If you are unsure and the answer
         is not explicitly written in the documentation, say
         "Sorry, I don't know how to help with that."
+        
+        IMPORTANT: Always include a "Sources:" section at the end of your response
+        with links to the source materials used to answer the question.
       `}
 
       Context sections:
@@ -128,7 +137,10 @@ export default async function handler(req: NextRequest) {
       ${sanitizedQuery}
       """
 
-      Answer as markdown (including related code snippets if available):
+      Available sources for this answer:
+      ${sources.map(source => `- ${source}`).join('\n')}
+
+      Answer as markdown (including related code snippets if available), and always end with a Sources section:
     `
 
     const chatMessage: ChatCompletionRequestMessage = {
