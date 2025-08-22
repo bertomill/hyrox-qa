@@ -129,6 +129,9 @@ importers:
       '@types/mdast':
         specifier: ^3.0.11
         version: 3.0.15
+      '@types/pdf-parse':
+        specifier: ^1.1.5
+        version: 1.1.5
       '@types/yargs':
         specifier: ^17.0.24
         version: 17.0.33
@@ -819,6 +822,9 @@ packages:
 
   '@types/node@18.15.10':
     resolution: {integrity: sha512-9avDaQJczATcXgfmMAW3MIWArOO7A+m90vuCFLr8AotWf8igO/mRoYukrk2cqZVtv38tHs33retzHEilM7FpeQ==}
+
+  '@types/pdf-parse@1.1.5':
+    resolution: {integrity: sha512-kBfrSXsloMnUJOKi25s3+hRmkycHfLK6A09eRGqF/N8BkQoPUmaCr+q8Cli5FnfohEz/rsv82zAiPz/LXtOGhA==}
 
   '@types/phoenix@1.6.6':
     resolution: {integrity: sha512-PIzZZlEppgrpoT2QgbnDU+MMzuR6BbCjllj0bM70lWoejMeNJAxCchxnv7J3XFkI8MpygtRpzXrIlmWUBclP5A==}
@@ -3795,6 +3801,10 @@ snapshots:
   '@types/ms@2.1.0': {}
 
   '@types/node@18.15.10': {}
+
+  '@types/pdf-parse@1.1.5':
+    dependencies:
+      '@types/node': 18.15.10
 
   '@types/phoenix@1.6.6': {}
 

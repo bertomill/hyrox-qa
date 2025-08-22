@@ -1,0 +1,13 @@
+# Exclude data collection scripts from build
+lib/crawl-hyrox.ts
+lib/convert-hyrox-to-mdx.ts
+lib/convert-pdfs-to-mdx.ts
+lib/fix-mdx-syntax.ts
+
+# Exclude data directories
+data/
+pages/docs/pdfs/
+
+# Exclude local env files
+.env.local
+.env*.local

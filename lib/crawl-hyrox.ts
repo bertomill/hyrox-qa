@@ -22,16 +22,10 @@ async function crawlHyrox() {
   try {
     const crawlResult = await app.crawl('https://hyrox.com', {
       limit: 100,
-      maxDepth: 2,
       scrapeOptions: {
         formats: ['markdown', 'html'],
         onlyMainContent: true,
       },
-      includePaths: [],
-      excludePaths: [],
-      allowBackwardLinks: false,
-      allowExternalLinks: false,
-      ignoreSitemap: false,
       pollInterval: 2,
     })
 

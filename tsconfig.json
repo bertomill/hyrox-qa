@@ -20,5 +20,11 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "lib/crawl-hyrox.ts",
+    "lib/convert-hyrox-to-mdx.ts", 
+    "lib/convert-pdfs-to-mdx.ts",
+    "lib/fix-mdx-syntax.ts"
+  ]
 }
